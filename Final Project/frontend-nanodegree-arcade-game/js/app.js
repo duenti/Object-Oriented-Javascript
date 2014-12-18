@@ -115,6 +115,14 @@ Player.prototype.update = function(){
 
     this.win();
 
+    var pontos = getPoints();    
+    if(pontos > record){
+        record = pontos;
+    }
+
+    var texto = "Pontos: " + pontos + "/" + record;
+    $('h1').text(texto);;
+
     if(this.way == 1){
         this.y--;
         this.way = 0;
@@ -160,6 +168,7 @@ Player.prototype.win = function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var record = 0;
 var allEnemies = [];
 allEnemies.push(new Enemy());
 
@@ -177,3 +186,7 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+var getPoints = function(){
+    return (allEnemies.length - 1)*100;//allEnemies.length;
+}
