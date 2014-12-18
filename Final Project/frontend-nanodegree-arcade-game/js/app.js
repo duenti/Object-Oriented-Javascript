@@ -33,11 +33,29 @@ Enemy.prototype.update = function(dt) {
         this.generateCollum();
         this.generateLine();
     }
+
+    if(this.colision() == true){
+        player.die();
+    }
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Enemy.prototype.colision = function(){
+    var raio = 90;
+    var newPX = player.x * 101;
+    var newPY = player.y * 83;
+
+    if (newPY == this.y){ //Mesma linha
+        if(this.x > newPX-raio && this.x < newPX+raio){
+            console.log("pegou");
+            return true;
+        }
+    }
+    return false;
 }
 
 // Now write your own player class
@@ -56,6 +74,25 @@ var Player = function(){
     */
     this.way = 0;
 }
+
+Player.prototype.die = function(){
+    var spritesList = ['images/char-boy.png', 'images/char-cat-girl.png', 
+    'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
+
+    var i = Math.floor((Math.random() * 5));
+
+    while(this.sprite == spritesList[i]){
+        i = Math.floor((Math.random() * 5));
+    }
+
+    console.log(spritesList[i]);
+    this.sprite = spritesList[i];
+    this.x = 2;
+    this.y = 5;
+    allEnemies = [];
+    allEnemies.push(new Enemy());
+}
+
 Player.prototype.update = function(){
     switch(this.way){
         case 1:
@@ -75,6 +112,8 @@ Player.prototype.update = function(){
             this.way = 0;
             break;
     }
+
+    this.win();
 
     if(this.way == 1){
         this.y--;
@@ -110,15 +149,19 @@ Player.prototype.handleInput = function(e){
     }
 }
 
+Player.prototype.win = function(){
+    if(this.y == 0){
+        this.x = 2;
+        this.y = 5;
+        allEnemies.push(new Enemy());
+    }
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var qtEnemies = 5;
 var allEnemies = [];
-for(var i = 0; i < qtEnemies; i++){
-    var enemy = new Enemy();
-    allEnemies.push(enemy);
-}
+allEnemies.push(new Enemy());
 
 var player = new Player();
 
